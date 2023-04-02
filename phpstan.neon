@@ -1,0 +1,9 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/phpstan/phpstan-mockery/extension.neon
+parameters:
+    paths:
+        - app
+    level: 8
+    ignoreErrors:
+    excludePaths:
