@@ -39,4 +39,4 @@ db-up: ## run migration and seed
 	$(DOCKER_RUN) $(ARTISAN) migrate --seed
 
 db-reset: ## reset and re-seed
-	$(DOCKER_RUN) $(ARTISAN) migrate:refresh -seed
+	$(DOCKER_RUN) $(ARTISAN) migrate:refresh --seed

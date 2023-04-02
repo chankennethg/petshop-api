@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -43,6 +46,20 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e): void {
             //
+        });
+
+        $this->renderable(function (Throwable $e) {
+            if ($e instanceof MethodNotAllowedHttpException) {
+                return response()->json(['error' => $e->getMessage()], 404);
+            }
+
+            if ($e instanceof AccessDeniedHttpException) {
+                return response()->json(['error' => $e->getMessage()], 403);
+            }
+
+            if ($e instanceof ValidationException) {
+                return response()->json($e->errors(), 403);
+            }
         });
     }
 }
