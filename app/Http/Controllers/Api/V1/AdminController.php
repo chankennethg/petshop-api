@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\V1\ApiException;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Admin\AdminUserListingRequest;
-use App\Models\User;
+use App\Http\Requests\V1\LoginRequest;
+use App\Http\Services\Jwt\JwtAuth;
+use App\Http\Services\Jwt\JwtParser;
+use App\Traits\ApiTransformer;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Response;
 
 class AdminController extends Controller
 {
+    use ApiTransformer;
+
     /**
      * Lists non-admin users
      *
@@ -20,21 +29,43 @@ class AdminController extends Controller
         $filters = $request->safe()->only(['first_name']);
 
         $users = User::NonAdmin()
-        ->filter($filters)
-        ->sort($request)
-        ->paginate($request->get('limit', 10));
+            ->filter($filters)
+            ->sort($request)
+            ->paginate($request->get('limit', 10));
 
         return Response::json($users);
     }
 
     /**
-     * Undocumented function
+     * User Login
      *
-     * @return void
+     * @param LoginRequest $request
+     * @return JsonResponse
      */
-    public function login(): void
+    public function login(LoginRequest $request, JwtAuth $jwtAuth): JsonResponse
     {
-        // @todo Something
+        $credentials = $request->safe()->all();
+        $credentials['is_admin'] = true;
+
+        // Check if credentials match
+        if (!Auth::attempt($credentials)) {
+            throw new ApiException(422, 'Unauthorized');
+        }
+
+        /** @var User */
+        $user = Auth::user();
+        $user->last_login_at = now();
+        $user->save();
+
+        $id = (string) $user->id;
+        $token = $jwtAuth->createToken([
+            'uuid' => $user->uuid,
+            'email' => $user->email
+        ], $id);
+
+        return $this->toResponse(200, 1, [
+            'token' => $token
+        ]);
     }
 
     /**

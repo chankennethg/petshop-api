@@ -7,9 +7,16 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use App\Traits\ApiTransformer;
+use ErrorException;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
+    use ApiTransformer;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -27,6 +34,18 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         //
     ];
+
+    /**
+     *
+     * @var array<mixed,mixed>
+     */
+    protected $data;
+
+    /**
+     * @var array<mixed,mixed>
+     */
+    protected $errors;
+
 
     /**
      * A list of the inputs that are never flashed to the session on validation exceptions.
@@ -48,17 +67,29 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (Throwable $e) {
+        $this->renderable(function (Throwable $e, Request $request) {
+            if ($e instanceof UnauthorizedHttpException) {
+                return $this->toResponse(401, 0, [], $e->getMessage());
+            }
+
             if ($e instanceof MethodNotAllowedHttpException) {
-                return response()->json(['error' => $e->getMessage()], 404);
+                return $this->toResponse(405, 0, [], $e->getMessage(), [], $e->getTrace());
             }
 
             if ($e instanceof AccessDeniedHttpException) {
-                return response()->json(['error' => $e->getMessage()], 403);
+                return $this->toResponse(403, 0, [], $e->getMessage(), [], $e->getTrace());
             }
 
             if ($e instanceof ValidationException) {
-                return response()->json($e->errors(), 403);
+                return $this->toResponse(422, 0, [], 'Validation Error', $e->errors(), $e->getTrace());
+            }
+
+            if ($e instanceof NotFoundHttpException) {
+                return $this->toResponse(404, 0, [], 'Not Found');
+            }
+
+            if ($e instanceof ErrorException) {
+                return $this->toResponse(500, 0, [], $e->getMessage(), [], $e->getTrace());
             }
         });
     }

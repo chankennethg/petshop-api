@@ -17,7 +17,7 @@ trait HasUuid
     {
         static::creating(function ($model) {
             if (!$model->uuid) {
-                $model->uuid = (string)Str::orderedUuid();
+                $model->uuid = (string) Str::orderedUuid();
             }
         });
     }
@@ -37,7 +37,7 @@ trait HasUuid
      * Eloquent scope to look for a given UUID
      *
      * @param  Builder $query
-     * @param  String                                              $uuid  The UUID to search for
+     * @param  String  $uuid  The UUID to search for
      * @return Builder
      */
     public function scopeUuid(Builder $query, string $uuid): Builder

@@ -45,7 +45,7 @@ class User extends Authenticatable
         'address',
         'phone_number',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
@@ -94,5 +94,15 @@ class User extends Authenticatable
         }
 
         return $query;
+    }
+
+    /**
+     * Get User UUID
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 }

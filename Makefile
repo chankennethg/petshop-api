@@ -40,3 +40,6 @@ db-up: ## run migration and seed
 
 db-reset: ## reset and re-seed
 	$(DOCKER_RUN) $(ARTISAN) migrate:refresh --seed
+
+jwt-key: ## Generate JWT key
+	$(DOCKER_RUN) ssh-keygen -t rsa -b 4096 -m PEM -f storage/jwt.key && openssl rsa -in storage/jwt.key -pubout -outform PEM -out storage/jwt.key.pub

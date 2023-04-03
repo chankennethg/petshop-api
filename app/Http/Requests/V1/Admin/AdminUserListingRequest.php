@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\V1\Admin;
 
+use App\Models\User;
 use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,10 +13,9 @@ class AdminUserListingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // $user = Auth::user();
-        // return $user->is_admin;
-
-        return true;
+        /** @var User */
+        $user = Auth::user();
+        return $user->is_admin;
     }
 
     /**
