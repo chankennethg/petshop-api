@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Jwt;
 
+use App\Exceptions\V1\ApiException;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
@@ -51,7 +52,7 @@ class JwtGuard implements Guard
         $this->user = $this->authenticateByToken();
 
         if (!$this->user) {
-            return null;
+            throw new ApiException(401, 'Unauthorized');
         }
 
         return $this->user;
@@ -83,7 +84,7 @@ class JwtGuard implements Guard
      */
     protected function authenticateByToken()
     {
-        if (! empty($this->user)) {
+        if (!empty($this->user)) {
             return $this->user;
         }
 

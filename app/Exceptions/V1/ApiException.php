@@ -60,13 +60,15 @@ class ApiException extends Exception
      */
     public function render(Request $request)
     {
+        $trace = (config('app.debug') === false) ? [] : $this->getTrace();
+
         return $this->toResponse(
             $this->statusCode,
             0,
             $this->data,
             $this->getMessage(),
             $this->errors,
-            $this->getTrace()
+            $trace
         );
     }
 }

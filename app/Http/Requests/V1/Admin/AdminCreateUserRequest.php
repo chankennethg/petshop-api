@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\V1\Admin;
 
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminCreateUserRequest extends FormRequest
@@ -11,9 +12,9 @@ class AdminCreateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // $user = Auth::user();
-        // return $user->is_admin;
-        return false;
+        /** @var \App\Models\User */
+        $user = Auth::user();
+        return $user->is_admin;
     }
 
     /**
