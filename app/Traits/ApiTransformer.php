@@ -14,17 +14,19 @@ trait ApiTransformer
      * @param array<mixed,mixed> $data
      * @param string|null $error
      * @param array<mixed,mixed> $errors
-     * @param array<mixed,mixed> $trace
+     * @param array<mixed,mixed> $extra
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function toResponse($code = 400, $isSuccess = 0, $data = [], $error = null, $errors = [], $trace = [])
+    protected function toResponse(int $code = 400, int $isSuccess = 0, array $data = [], string $error = null, array $errors = [], array $extra = [])
     {
+        $extraKeyName = $isSuccess === 0 ? 'trace' : 'extra';
+
         return response()->json([
             'success' => $isSuccess,
             'data' => $data,
             'error' => $error,
             'errors' => $errors,
-            'trace' => $trace,
+            $extraKeyName => $extra,
         ], $code);
     }
 }

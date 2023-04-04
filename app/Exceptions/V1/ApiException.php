@@ -4,15 +4,15 @@ namespace App\Exceptions\V1;
 
 use App\Traits\ApiTransformer;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class ApiException extends Exception
 {
     use ApiTransformer;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $statusCode;
 
@@ -27,11 +27,10 @@ class ApiException extends Exception
      */
     protected $errors;
 
-
     /**
      * Class constructor
      *
-     * @param integer $statusCode
+     * @param int $statusCode
      * @param string $message
      * @param array<mixed,mixed> $data
      */
@@ -47,7 +46,7 @@ class ApiException extends Exception
      *
      * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -58,9 +57,9 @@ class ApiException extends Exception
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function render(Request $request)
+    public function render(Request $request): JsonResponse
     {
-        $trace = (config('app.debug') === false) ? [] : $this->getTrace();
+        $trace = config('app.debug') === false ? [] : $this->getTrace();
 
         return $this->toResponse(
             $this->statusCode,

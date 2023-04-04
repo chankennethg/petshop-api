@@ -12,7 +12,7 @@ class AdminCreateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        /** @var \App\Models\User */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         return $user->is_admin;
     }
@@ -25,15 +25,15 @@ class AdminCreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'first_name' => 'required|string',
-           'last_name' => 'required|string',
-           'email' => 'required|email|unique:users,email',
-           'password' => 'required|string',
-           'password_confirmation' => 'required|string|same:password',
-           'address' => 'required|string',
-           'phone_number' => 'required|string',
-           'avatar' => 'nullable|exists:files,uuid',
-           'is_marketing' => 'nullable|boolean',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string',
+            'password_confirmation' => 'required|string|same:password',
+            'address' => 'required|string',
+            'phone_number' => 'required|string',
+            'avatar' => 'nullable|exists:files,uuid',
+            'is_marketing' => 'nullable|boolean',
         ];
     }
 }

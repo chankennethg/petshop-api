@@ -2,12 +2,11 @@
 
 namespace App\Http\Services\Jwt;
 
-use App\Exceptions\V1\ApiException;
-use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
+use Illuminate\Auth\GuardHelpers;
+use App\Exceptions\V1\ApiException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class JwtGuard implements Guard
 {
@@ -22,7 +21,6 @@ class JwtGuard implements Guard
      * @var JwtParser
      */
     private $parser;
-
 
     /**
      * Class constructor
@@ -64,7 +62,7 @@ class JwtGuard implements Guard
      * @param array<string,mixed> $credentials
      * @return bool
      */
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): bool
     {
         if (!$credentials) {
             return false;
@@ -114,7 +112,7 @@ class JwtGuard implements Guard
      *
      * @return string|null
      */
-    protected function getBearerToken()
+    protected function getBearerToken(): ?string
     {
         return $this->request->bearerToken();
     }
@@ -123,10 +121,9 @@ class JwtGuard implements Guard
      * Attempt auth
      *
      * @param array<string,mixed> $credentials
-     * @param boolean $login
-     * @return boolean
+     * @return bool
      */
-    public function attempt(array $credentials = [], $login = true)
+    public function attempt(array $credentials = []): bool
     {
         $user = $this->provider->retrieveByCredentials($credentials);
 
@@ -143,9 +140,9 @@ class JwtGuard implements Guard
      *
      * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
      * @param array<string,mixed> $credentials
-     * @return boolean
+     * @return bool
      */
-    protected function hasValidCredentials($user, $credentials)
+    protected function hasValidCredentials($user, $credentials): bool
     {
         return $user !== null && $this->provider->validateCredentials($user, $credentials);
     }

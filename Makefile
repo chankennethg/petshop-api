@@ -23,7 +23,7 @@ update: ## update all php libraries
 	$(DOCKER_RUN) composer update
 
 test: ## run tests
-	$(DOCKER_RUN) $(PHPUNIT)
+	$(DOCKER_RUN) $(ARTISAN) test
 
 standards: ## check if code complies to standards
 	$(DOCKER_RUN) $(PHPSTAN)

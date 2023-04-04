@@ -2,19 +2,15 @@
 
 namespace App\Http\Services\Jwt;
 
-use App\Exceptions\V1\ApiException;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Encoding\CannotDecodeContent;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\JwtFacade;
-use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Token\UnsupportedHeaderFound;
 use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Encoding\CannotDecodeContent;
+use Lcobucci\JWT\Token\InvalidTokenStructure;
+use Lcobucci\JWT\Token\UnsupportedHeaderFound;
+use App\Exceptions\V1\ApiException;
 
 class JwtParser
 {
-
     /**
      * @var Configuration
      */
@@ -134,7 +130,7 @@ class JwtParser
     }
 
     /**
-     * Undocumented function
+     * Get Public Key
      *
      * @return string|false
      */
@@ -144,17 +140,17 @@ class JwtParser
     }
 
     /**
-     * Undocumented function
+     * Get Algo
      *
-     * @return mixed
+     * @return string
      */
-    protected function getAlgo()
+    protected function getAlgo(): string
     {
         return config('jwt.encrypt_algo');
     }
 
     /**
-     * Undocumented function
+     * Get Leeway
      *
      * @return mixed
      */
@@ -164,7 +160,7 @@ class JwtParser
     }
 
     /**
-     * Undocumented function
+     * Get TTL
      *
      * @return mixed
      */

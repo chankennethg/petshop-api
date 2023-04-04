@@ -5,6 +5,7 @@ services:
     image: thecodingmachine/php:8.2-v4-apache
     environment:
       - APACHE_DOCUMENT_ROOT=public/
+      - PHP_EXTENSION_PDO_SQLITE=1
     volumes:
       - "./:/var/www/html/"
     ports:

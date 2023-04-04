@@ -13,7 +13,7 @@ class AdminUserListingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        /** @var User */
+        /** @var User $user*/
         $user = Auth::user();
         return $user->is_admin;
     }
@@ -31,7 +31,7 @@ class AdminUserListingRequest extends FormRequest
             'phone' => 'string',
             'address' => 'string',
             'created_at' => 'date|date_format:Y-m-d',
-            'is_marketing' => 'in:0,1'
+            'is_marketing' => 'in:0,1',
         ];
     }
 }

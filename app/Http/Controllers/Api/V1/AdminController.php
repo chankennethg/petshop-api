@@ -28,9 +28,9 @@ class AdminController extends Controller
      * Lists non-admin users
      *
      * @param AdminUserListingRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function list(AdminUserListingRequest $request)
+    public function list(AdminUserListingRequest $request): JsonResponse
     {
         $filters = $request->safe()->only(['first_name']);
 
@@ -54,12 +54,13 @@ class AdminController extends Controller
         $credentials['is_admin'] = true;
 
         // Check if credentials match
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::guard('api')->attempt($credentials)) {
             throw new ApiException(422, 'Unauthorized');
         }
 
-        /** @var User */
-        $user = Auth::user();
+        /** @var User $user*/
+        $user = Auth::guard('api')->user();
+
         $user->last_login_at = now();
         $user->save();
 
@@ -82,11 +83,14 @@ class AdminController extends Controller
      * @param JwtAuth $jwtAuth
      * @return JsonResponse
      */
-    public function createAdmin(AdminCreateUserRequest $request, JwtAuth $jwtAuth): JsonResponse
+    public function createAdmin(
+        AdminCreateUserRequest $request,
+        JwtAuth $jwtAuth
+    ): JsonResponse
     {
         $data = $request->safe()->all();
 
-        /** @var User */
+        /** @var User $user*/
         $user = new User();
         $user->first_name = $data['first_name'];
         $user->last_name = $data['last_name'];
@@ -102,14 +106,13 @@ class AdminController extends Controller
         $id = (string) $user->id;
         $token = $jwtAuth->createToken([
             'uuid' => $user->uuid,
-            'email' => $user->email
+            'email' => $user->email,
         ], $id);
 
         $responseBody = $user->only([
-            'uuid', 'first_name', 'last_name', 'email', 'address', 'phone_number', 'updated_at', 'created_at'
+            'uuid', 'first_name', 'last_name', 'email', 'address', 'phone_number', 'updated_at', 'created_at',
         ]);
         $responseBody['token'] = $token;
-
-        return $this->toResponse(200, 0, $responseBody);
+        return $this->toResponse(200, 1, $responseBody);
     }
 }

@@ -23,7 +23,7 @@ trait Sortable
         $column = $request->get('sortBy', 'id');
 
         // Get the direction of which to sort
-        $direction = ($request->get('desc', 'true') === 'true') ? 'desc' : 'asc';
+        $direction = $request->get('desc', 'true') === 'true' ? 'desc' : 'asc';
 
         if (in_array($column, $sortable)) {
             return $query->orderBy($column, $direction);

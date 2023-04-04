@@ -9,7 +9,6 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class JwtAuth
 {
-
     /**
      * @var Configuration
      */
@@ -27,9 +26,8 @@ class JwtAuth
      * @param non-empty-string $userId
      * @return string
      */
-    public function createToken(array $claims, string $userId)
+    public function createToken(array $claims, string $userId): string
     {
-        $signer = new Sha256;
         $now = (new DateTimeImmutable());
         $ttl = config('jwt.ttl');
 
