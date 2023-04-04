@@ -25,15 +25,15 @@ jobs:
       run: |
         composer install --no-scripts
 
-    - name: Prepare Laravel Application
-      run: |
-        cp .env.ci .env
-        php artisan key:generate
-
     - name: Generate SSL Keys
       run: |
         ssh-keygen -t rsa -b 4096 -m PEM -f storage/jwt.key
         openssl rsa -in storage/jwt.key -pubout -outform PEM -out storage/jwt.key.pub
+
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.ci .env
+        php artisan key:generate
 
     - name: Run Testsuite
       run: ./vendor/bin/phpunit
