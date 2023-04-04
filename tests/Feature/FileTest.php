@@ -59,9 +59,6 @@ class FileTest extends TestCase
      */
     public function test_user_upload_file_with_invalid_token(): void
     {
-        /** @var User $user */
-        $user = UserFactory::new()->create();
-
         $tokenHeader = $this->createTokenHeader('email', 9, '1-1-1');
 
         $file = UploadedFile::fake()->image('test.png');

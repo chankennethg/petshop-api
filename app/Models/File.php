@@ -16,7 +16,7 @@ class File extends Model
      *
      * @var array<int, string>
      */
-    protected array $fillable = [
+    protected $fillable = [
         'name',
         'path',
         'size',
@@ -28,7 +28,7 @@ class File extends Model
      *
      * @var array<int, string>
      */
-    protected array $hidden = [
+    protected $hidden = [
         'id',
     ];
 

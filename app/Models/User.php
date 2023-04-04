@@ -21,7 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected array $fillable = [
+    protected $fillable = [
         'first_name',
         'last_name',
         'email',
@@ -37,7 +37,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    public array $sortable = [
+    public $sortable = [
         'id',
         'first_name',
         'last_name',
@@ -53,7 +53,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected array $hidden = [
+    protected $hidden = [
         'id',
         'password',
         'is_admin',
@@ -65,7 +65,7 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected array $casts = [
+    protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
