@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Admin\AdminCreateUserRequest;
 use App\Http\Requests\V1\Admin\AdminUserListingRequest;
 use App\Http\Requests\V1\LoginRequest;
+use App\Http\Resources\V1\Admin\AdminCreateResource;
+use App\Http\Resources\V1\Admin\AdminLoginResource;
 use App\Http\Services\Jwt\JwtAuth;
 use App\Traits\ApiTransformer;
 use Illuminate\Http\JsonResponse;
@@ -17,8 +19,9 @@ use Response;
 
 class AdminController extends Controller
 {
-    use ApiTransformer;
-
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
         $this->middleware('auth:api')->except('login');
@@ -46,9 +49,9 @@ class AdminController extends Controller
      * User Login
      *
      * @param LoginRequest $request
-     * @return JsonResponse
+     * @return AdminLoginResource
      */
-    public function login(LoginRequest $request, JwtAuth $jwtAuth): JsonResponse
+    public function login(LoginRequest $request, JwtAuth $jwtAuth): AdminLoginResource
     {
         $credentials = $request->safe()->all();
         $credentials['is_admin'] = true;
@@ -71,9 +74,7 @@ class AdminController extends Controller
             'email' => $user->email
         ], $id);
 
-        return $this->toResponse(200, 1, [
-            'token' => $token
-        ]);
+        return new AdminLoginResource($user, $token);
     }
 
     /**
@@ -81,12 +82,12 @@ class AdminController extends Controller
      *
      * @param AdminCreateUserRequest $request
      * @param JwtAuth $jwtAuth
-     * @return JsonResponse
+     * @return AdminCreateResource
      */
     public function createAdmin(
         AdminCreateUserRequest $request,
         JwtAuth $jwtAuth
-    ): JsonResponse
+    ): AdminCreateResource
     {
         $data = $request->safe()->all();
 
@@ -99,20 +100,15 @@ class AdminController extends Controller
         $user->address = $request['address'];
         $user->phone_number = $request['phone_number'];
         $user->avatar = $request['avatar'];
-        $user->is_marketing = $request['marketing'] ?? false;
+        $user->is_marketing = $request['is_marketing'];
         $user->is_admin = true;
         $user->save();
 
-        $id = (string) $user->id;
         $token = $jwtAuth->createToken([
             'uuid' => $user->uuid,
             'email' => $user->email,
-        ], $id);
+        ], (string) $user->id);
 
-        $responseBody = $user->only([
-            'uuid', 'first_name', 'last_name', 'email', 'address', 'phone_number', 'updated_at', 'created_at',
-        ]);
-        $responseBody['token'] = $token;
-        return $this->toResponse(200, 1, $responseBody);
+        return new AdminCreateResource($user, $token);
     }
 }

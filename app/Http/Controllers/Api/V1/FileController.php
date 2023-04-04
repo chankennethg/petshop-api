@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\V1\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\FileRequest;
+use App\Http\Resources\V1\File\FileUploadResource;
 use App\Models\File;
-use App\Traits\ApiTransformer;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -16,15 +16,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
-    use ApiTransformer;
-
     /**
      * Upload a file
      *
      * @param FileRequest $request
-     * @return JsonResponse
+     * @return FileUploadResource
      */
-    public function upload(FileRequest $request): JsonResponse
+    public function upload(FileRequest $request): FileUploadResource
     {
         /** @var UploadedFile $file */
         $file = $request->file('file');
@@ -43,7 +41,7 @@ class FileController extends Controller
             throw new ApiException(500, 'Internal Server Error');
         }
 
-        return $this->toResponse(200, 1, $fileRecord->toArray());
+        return new FileUploadResource($fileRecord);
     }
 
     /**
@@ -57,7 +55,7 @@ class FileController extends Controller
         try {
             $file = File::where('uuid', $uuid)->firstOrFail();
         } catch(ModelNotFoundException $e) {
-            return $this->toResponse(404, 0, [], 'File not found');
+            throw new ApiException(404, 'File not found');
         }
 
         return Storage::download($file->path, $file->name);

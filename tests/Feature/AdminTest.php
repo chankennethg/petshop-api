@@ -113,7 +113,7 @@ class AdminTest extends TestCase
         ->post('/api/v1/admin/create', $payload, [
             'Authorization' => "Bearer {$token}"
         ])
-        ->assertStatus(200)
+        ->assertStatus(201)
         ->assertJsonStructure([
             'success',
             'data' => [

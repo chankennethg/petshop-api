@@ -33,7 +33,7 @@ class FileTest extends TestCase
         $this->post('/api/v1/file/upload', [
             'file' => $file,
         ], $tokenHeader)
-        ->assertStatus(200)
+        ->assertStatus(201)
         ->assertJsonStructure([
             'success',
             'data' => [
@@ -110,6 +110,8 @@ class FileTest extends TestCase
      */
     public function test_user_cannot_download_missing_file(): void
     {
+        $this->expectException(ApiException::class);
+
         $this->get('/api/v1/file/' . 'non-existing-uuid')
         ->assertStatus(404)
         ->assertJsonStructure([

@@ -33,7 +33,7 @@ class AdminCreateUserRequest extends FormRequest
             'address' => 'required|string',
             'phone_number' => 'required|string',
             'avatar' => 'nullable|exists:files,uuid',
-            'is_marketing' => 'nullable|boolean',
+            'is_marketing' => 'nullable|boolean:0,1',
         ];
     }
 }
