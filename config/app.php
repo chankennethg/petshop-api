@@ -212,4 +212,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+
+    'file_uploads_dir' => env('FILE_UPLOADS_DIR', 'pet-shop')
+
 ];

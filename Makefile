@@ -1,7 +1,7 @@
 
 DOCKER_RUN    = docker-compose run --rm api
 PHPUNIT       = ./vendor/bin/phpunit
-PHPSTAN       = ./vendor/bin/phpstan
+PHPSTAN       = ./vendor/bin/phpstan --memory-limit=1G
 PHPINSIGHTS   = ./vendor/bin/phpinsights
 ARTISAN       = php artisan
 

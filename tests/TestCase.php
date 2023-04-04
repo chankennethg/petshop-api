@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Http\Services\Jwt\JwtAuth;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\User;
 use Database\Factories\UserFactory;
@@ -50,6 +51,26 @@ abstract class TestCase extends BaseTestCase
             'error' => $error,
             'errors' => $errors,
             'extra' => $trace
+        ];
+    }
+
+    /**
+     * Create token per user
+     *
+     * @param string $email
+     * @param int $id
+     * @param string $uuid
+     * @return array<string,string>
+     */
+    protected function createTokenHeader($email, $id, $uuid): array
+    {
+        $token = ($this->app->make(JwtAuth::class))->createToken([
+            'uuid' => $uuid,
+            'email' => $email
+        ],(string) $id);
+
+        return [
+            'Authorization' => "Bearer {$token}"
         ];
     }
 }

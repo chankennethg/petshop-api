@@ -26,9 +26,9 @@ trait HasUuid
      * Find or fail
      *
      * @param string $uuid
-     * @return User
+     * @return object
      */
-    public static function findByUuidOrFail(string $uuid): User
+    public static function findByUuidOrFail(string $uuid): object
     {
         return self::whereUuid($uuid)->firstOrFail();
     }

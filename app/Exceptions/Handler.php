@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use App\Traits\ApiTransformer;
 use ErrorException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -90,6 +91,10 @@ class Handler extends ExceptionHandler
 
             if ($e instanceof ErrorException) {
                 return $this->toResponse(500, 0, [], $e->getMessage(), [], $e->getTrace());
+            }
+
+            if ($e instanceof ModelNotFoundException) {
+                return $this->toResponse(404, 0, [], 'Not Found', [], $e->getTrace());
             }
         });
     }

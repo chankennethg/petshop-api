@@ -21,7 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    protected array $fillable = [
         'first_name',
         'last_name',
         'email',
@@ -37,7 +37,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    public $sortable = [
+    public array $sortable = [
         'id',
         'first_name',
         'last_name',
@@ -53,7 +53,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
+    protected array $hidden = [
         'id',
         'password',
         'is_admin',
@@ -65,7 +65,7 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
+    protected array $casts = [
         'email_verified_at' => 'datetime',
     ];
 
@@ -87,7 +87,7 @@ class User extends Authenticatable
      * @param array<string, int|string|bool> $filters
      * @return Builder
      */
-    public function scopeFilter(Builder $query, array $filters)
+    public function scopeFilter(Builder $query, array $filters): Builder
     {
         if ($filters['first_name'] ?? null) {
             $query->where('first_name', 'like', '%' . $filters['first_name'] . '%');
@@ -101,7 +101,7 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getUuid()
+    public function getUuid(): string
     {
         return $this->uuid;
     }

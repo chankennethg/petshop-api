@@ -25,7 +25,7 @@ class ApiException extends Exception
     /**
      * @var array<mixed,mixed>
      */
-    protected $errors;
+    protected $errors = [];
 
     /**
      * Class constructor
