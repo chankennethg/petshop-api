@@ -74,7 +74,7 @@ class AdminController extends Controller
         // Create token
         $id = (string) $user->id;
         $token = $jwtAuth->createToken([
-            'uuid' => $user->uuid,
+            'user_uuid' => $user->uuid,
             'email' => $user->email,
         ], $id);
 
@@ -108,7 +108,7 @@ class AdminController extends Controller
         $user->save();
 
         $token = $jwtAuth->createToken([
-            'uuid' => $user->uuid,
+            'user_uuid' => $user->uuid,
             'email' => $user->email,
         ], (string) $user->id);
 

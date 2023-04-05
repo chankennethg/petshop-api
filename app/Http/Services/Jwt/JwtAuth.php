@@ -33,7 +33,7 @@ class JwtAuth
             // boot builder
             ->builder()
             // Configures the issuer (iss claim)
-            ->issuedBy(config('app.name'))
+            ->issuedBy(config('app.url'))
             // Configures the audience (aud claim)
             ->permittedFor(config('app.url'))
             // Configures the time that the token was issue (iat claim)
