@@ -2,22 +2,22 @@
 
 namespace App\Exceptions\V1;
 
-use App\Traits\ApiTransformer;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use App\Exceptions\Actions\TransformToJson;
 
-class ApiException extends Exception
+/**
+ * Custom API Exception Handler Class
+ */
+class ApiHandler extends Exception
 {
-    use ApiTransformer;
-
     /**
      * @var int
      */
     protected $statusCode;
 
     /**
-     * @var array<mixed,mixed>
+     * @var array<string,mixed>
      */
     protected $data;
 
@@ -31,7 +31,7 @@ class ApiException extends Exception
      *
      * @param int $statusCode
      * @param string $message
-     * @param array<mixed,mixed> $data
+     * @param array<string,mixed> $data
      */
     public function __construct(int $statusCode = 400, string $message = "", array $data = [])
     {
@@ -53,14 +53,13 @@ class ApiException extends Exception
     /**
      * Exception renderer
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function render(Request $request): JsonResponse
+    public function render(): JsonResponse
     {
-        $trace = config('app.debug') === false ? [] : $this->getTrace();
+        $trace = config('app.debug') ? $this->getTrace() : [];
 
-        return $this->toResponse(
+        return TransformToJson::handle(
             $this->statusCode,
             0,
             $this->data,

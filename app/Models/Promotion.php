@@ -44,11 +44,14 @@ class Promotion extends Model implements ListableContract
     {
         return [
             'id',
+            'uuid',
             'title',
             'content',
             'metadata->image',
             'metadata->valid_from',
             'metadata->valid_to',
+            'created_at',
+            'updated_at',
         ];
     }
 

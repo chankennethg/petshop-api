@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Exceptions\V1\ApiException;
+use Response;
 use App\Models\User;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\Admin\AdminCreateUserRequest;
-use App\Http\Requests\V1\Admin\AdminUserListingRequest;
-use App\Http\Requests\V1\LoginRequest;
-use App\Http\Resources\V1\Admin\AdminCreateResource;
-use App\Http\Resources\V1\Admin\AdminLoginResource;
-use App\Http\Services\Jwt\JwtAuth;
+use App\Exceptions\V1\ApiHandler;
 use Illuminate\Http\JsonResponse;
+use App\Http\Services\Jwt\JwtAuth;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Response;
+use App\Http\Requests\V1\LoginRequest;
+use App\Http\Resources\V1\Admin\AdminLoginResource;
+use App\Http\Resources\V1\Admin\AdminCreateResource;
+use App\Http\Requests\V1\Admin\AdminCreateUserRequest;
+use App\Http\Requests\V1\Admin\AdminUserListingRequest;
 
 class AdminController extends Controller
 {
@@ -59,7 +59,7 @@ class AdminController extends Controller
 
         // Check if credentials match
         if (!Auth::guard('api')->attempt($credentials)) {
-            throw new ApiException(422, 'Unauthorized');
+            throw new ApiHandler(422, 'Unauthorized');
         }
 
         /** @var User $user*/

@@ -2,17 +2,16 @@
 
 namespace Tests\Feature;
 
-use App\Exceptions\V1\ApiException;
-use App\Http\Services\Jwt\JwtAuth;
-use Database\Factories\UserFactory;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Str;
+use Hash;
 use Tests\TestCase;
 use App\Models\User;
-use Hash;
 use Illuminate\Http\Response;
+use App\Exceptions\V1\ApiHandler;
+use App\Http\Services\Jwt\JwtAuth;
+use Database\Factories\UserFactory;
 use Illuminate\Validation\ValidationException;
-use Str;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
 {
@@ -60,7 +59,7 @@ class AdminTest extends TestCase
             'is_admin' => true,
         ]);
 
-        $this->expectException(ApiException::class);
+        $this->expectException(ApiHandler::class);
 
         $this->post('/api/v1/admin/login', [
             'email' => $user->email,

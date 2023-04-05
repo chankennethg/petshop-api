@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\V1\File;
 
-use App\Http\Resources\V1\BaseResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\V1\BaseResource;
 
 class FileUploadResource extends BaseResource
 {

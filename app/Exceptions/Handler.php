@@ -3,21 +3,19 @@
 namespace App\Exceptions;
 
 use Throwable;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use ErrorException;
+use Illuminate\Http\Request;
+use App\Exceptions\Actions\TransformToJson;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use App\Traits\ApiTransformer;
-use ErrorException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
-    use ApiTransformer;
-
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -68,33 +66,34 @@ class Handler extends ExceptionHandler
             //
         });
 
+        /** Will serve as fallback to uncatched errors in ApiHandler */
         $this->renderable(function (Throwable $e, Request $request) {
             if ($e instanceof UnauthorizedHttpException) {
-                return $this->toResponse(401, 0, [], $e->getMessage());
+                return TransformToJson::handle(401, 0, [], $e->getMessage());
             }
 
             if ($e instanceof MethodNotAllowedHttpException) {
-                return $this->toResponse(405, 0, [], $e->getMessage(), [], $e->getTrace());
+                return TransformToJson::handle(405, 0, [], $e->getMessage(), [], $e->getTrace());
             }
 
             if ($e instanceof AccessDeniedHttpException) {
-                return $this->toResponse(403, 0, [], $e->getMessage(), [], $e->getTrace());
+                return TransformToJson::handle(403, 0, [], $e->getMessage(), [], $e->getTrace());
             }
 
             if ($e instanceof ValidationException) {
-                return $this->toResponse(422, 0, [], 'Validation Error', $e->errors(), $e->getTrace());
+                return TransformToJson::handle(422, 0, [], 'Validation Error', $e->errors(), $e->getTrace());
             }
 
             if ($e instanceof NotFoundHttpException) {
-                return $this->toResponse(404, 0, [], 'Not Found');
+                return TransformToJson::handle(404, 0, [], 'Not Found');
             }
 
             if ($e instanceof ErrorException) {
-                return $this->toResponse(500, 0, [], $e->getMessage(), [], $e->getTrace());
+                return TransformToJson::handle(500, 0, [], $e->getMessage(), [], $e->getTrace());
             }
 
             if ($e instanceof ModelNotFoundException) {
-                return $this->toResponse(404, 0, [], 'Not Found', [], $e->getTrace());
+                return TransformToJson::handle(404, 0, [], 'Not Found', [], $e->getTrace());
             }
         });
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\V1\BaseResource;
 
 class PostSingleResource extends BaseResource
 {

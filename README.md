@@ -38,5 +38,4 @@ make test
 ## Features and Considerations
 @TODO
 - Promotion UUID, created_at, updated_at sortable
-- FileRequest class name
 

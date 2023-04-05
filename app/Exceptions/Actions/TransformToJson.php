@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Traits;
+namespace App\Exceptions\Actions;
 
-/**
- * Transform Response into general format
- */
-trait ApiTransformer
+class TransformToJson
 {
     /**
      * Undocumented function
@@ -17,7 +14,7 @@ trait ApiTransformer
      * @param array<mixed,mixed> $extra
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function toResponse(
+    public static function handle(
         int $code = 400,
         int $isSuccess = 0,
         array $data = [],

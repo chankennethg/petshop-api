@@ -5,7 +5,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Post;
-use App\Exceptions\V1\ApiException;
+use App\Exceptions\V1\ApiHandler;
 use Database\Factories\FileFactory;
 use Database\Factories\PostFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -151,7 +151,7 @@ class PostTest extends TestCase
      */
     public function test_cannot_get_non_existing_single_post(): void
     {
-        $this->expectException(ApiException::class);
+        $this->expectException(ApiHandler::class);
         $response = $this->get("/api/v1/main/blog/123-2131-33");
         $response->assertStatus(404)
         ->assertJsonStructure([

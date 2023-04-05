@@ -3,11 +3,11 @@
 namespace App\Http\Services\Jwt;
 
 use Lcobucci\JWT\Configuration;
+use App\Exceptions\V1\ApiHandler;
 use Lcobucci\JWT\UnencryptedToken;
-use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
+use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Token\UnsupportedHeaderFound;
-use App\Exceptions\V1\ApiException;
 
 class JwtParser
 {
@@ -43,7 +43,7 @@ class JwtParser
             // @phpstan-ignore-next-line
             $this->token = $this->config->parser()->parse($token);
         } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound $e) {
-            throw new ApiException(401, 'Unauthorized');
+            throw new ApiHandler(401, 'Unauthorized');
         }
         return $this;
     }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\V1\Admin;
 
-use App\Models\User;
 use Auth;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdminUserListingRequest extends FormRequest

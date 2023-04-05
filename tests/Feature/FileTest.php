@@ -2,16 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Exceptions\V1\ApiException;
+use Tests\TestCase;
 use App\Models\File;
 use App\Models\User;
+use App\Exceptions\V1\ApiHandler;
+use Illuminate\Http\UploadedFile;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
 
 
 class FileTest extends TestCase
@@ -63,7 +60,7 @@ class FileTest extends TestCase
 
         $file = UploadedFile::fake()->image('test.png');
 
-        $this->expectException(ApiException::class);
+        $this->expectException(ApiHandler::class);
 
         $this->post('/api/v1/file/upload', [
             'file' => $file,
@@ -110,7 +107,7 @@ class FileTest extends TestCase
      */
     public function test_user_cannot_download_missing_file(): void
     {
-        $this->expectException(ApiException::class);
+        $this->expectException(ApiHandler::class);
 
         $this->get('/api/v1/file/' . 'non-existing-uuid')
         ->assertStatus(404)

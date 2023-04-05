@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Exceptions\V1\ApiException;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\FileRequest;
-use App\Http\Resources\V1\File\FileUploadResource;
-use App\Models\File;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\File;
+use App\Exceptions\V1\ApiHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\V1\FileUploadRequest;
+use App\Http\Resources\V1\File\FileUploadResource;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FileController extends Controller
 {
     /**
      * Upload a file
      *
-     * @param FileRequest $request
+     * @param FileUploadRequest $request
      * @return FileUploadResource
      */
-    public function upload(FileRequest $request): FileUploadResource
+    public function upload(FileUploadRequest $request): FileUploadResource
     {
         /** @var UploadedFile $file */
         $file = $request->file('file');
@@ -37,7 +37,7 @@ class FileController extends Controller
             $fileRecord->type = $file->getClientMimeType();
             $fileRecord->save();
         } catch(Exception $e) {
-            throw new ApiException(500, 'Internal Server Error');
+            throw new ApiHandler(500, 'Internal Server Error');
         }
 
         return new FileUploadResource($fileRecord);
@@ -54,7 +54,7 @@ class FileController extends Controller
         try {
             $file = File::where('uuid', $uuid)->firstOrFail();
         } catch(ModelNotFoundException $e) {
-            throw new ApiException(404, 'File not found');
+            throw new ApiHandler(404, 'File not found');
         }
 
         return Storage::download($file->path, $file->name);
