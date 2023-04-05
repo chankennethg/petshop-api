@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\PromotionController;
@@ -21,4 +22,6 @@ Route::prefix('file')->group(function (): void {
 
 Route::prefix('main')->group(function (): void {
     Route::get('promotions', [PromotionController::class, 'list'])->withoutMiddleware('auth.jwt');
+    Route::get('blog', [PostController::class, 'list'])->withoutMiddleware('auth.jwt');
+    Route::get('blog/{uuid}', [PostController::class, 'get'])->withoutMiddleware('auth.jwt');
 });
