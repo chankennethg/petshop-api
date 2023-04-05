@@ -3,16 +3,17 @@
 namespace App\Http\Requests\V1\Admin;
 
 use Auth;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminCreateUserRequest extends FormRequest
+class AdminEditUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user*/
         $user = Auth::user();
         return $user->is_admin;
     }
@@ -27,12 +28,12 @@ class AdminCreateUserRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|email:rfc|unique:users,email',
+            'email' => 'required|email:rfc',
             'password' => 'required|string|confirmed|min:8',
+            'avatar' => 'nullable|string|exists:files,uuid',
             'address' => 'required|string',
             'phone_number' => 'required|string',
-            'avatar' => 'required|exists:files,uuid',
-            'is_marketing' => 'nullable|boolean:0,1',
+            'is_marketing' => 'in:0,1',
         ];
     }
 }

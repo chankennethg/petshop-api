@@ -19,7 +19,6 @@ class PromotionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        FileFactory::new()->count(1)->create();
         PromotionFactory::new()->count(30)->create();
     }
 

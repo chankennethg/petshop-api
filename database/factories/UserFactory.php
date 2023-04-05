@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Hash;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,7 +26,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => null,
+            'avatar' => File::all()->random()->uuid,
             'address' => fake()->address(),
             'phone_number' => fake()->phoneNumber(),
             'is_marketing' => fake()->boolean(),

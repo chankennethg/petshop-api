@@ -2,11 +2,10 @@
 
 namespace Tests;
 
+use App\Models\File;
 use App\Http\Services\Jwt\JwtAuth;
+use Database\Factories\FileFactory;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use App\Models\User;
-use Database\Factories\UserFactory;
-use Illuminate\Support\Facades\Hash;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -19,6 +18,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->withoutExceptionHandling();
+        if (File::count() === 0) FileFactory::new()->count(1)->create();
     }
 
 

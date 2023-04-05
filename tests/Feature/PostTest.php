@@ -20,7 +20,6 @@ class PostTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        FileFactory::new()->count(1)->create();
         PostFactory::new()->count(30)->create();
     }
 

@@ -11,7 +11,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\V1\LoginRequest;
+use App\Http\Resources\V1\BaseResource;
+use App\Http\Resources\V1\Admin\AdminEditResource;
 use App\Http\Resources\V1\Admin\AdminLoginResource;
+use App\Http\Requests\V1\Admin\AdminEditUserRequest;
 use App\Http\Resources\V1\Admin\AdminCreateResource;
 use App\Http\Requests\V1\Admin\AdminCreateUserRequest;
 use App\Http\Requests\V1\Admin\AdminUserListingRequest;
@@ -110,5 +113,47 @@ class AdminController extends Controller
         ], (string) $user->id);
 
         return new AdminCreateResource($user, $token);
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param string $uuid
+     * @throws ApiHandler
+     * @return BaseResource
+     */
+    public function deleteUser(string $uuid): BaseResource
+    {
+        $result = User::uuid($uuid)
+            ->where('is_admin', false)
+            ->delete();
+
+        if (!$result) {
+            throw new ApiHandler(404, 'User not found');
+        }
+
+        return new BaseResource($result);
+    }
+
+    /**
+     * Update a user
+     *
+     * @param AdminEditUserRequest $request
+     * @param string $uuid
+     * @throws ApiHandler
+     * @return AdminEditResource
+     */
+    public function editUser(AdminEditUserRequest $request, string $uuid): AdminEditResource
+    {
+        $payload = $request->safe()->all();
+        $result = User::uuid($uuid)
+            ->where('is_admin', false)
+            ->update($payload);
+
+        if (!$result) {
+            throw new ApiHandler(404, 'User not found');
+        }
+
+        return new AdminEditResource(User::uuid($uuid)->first());
     }
 }
