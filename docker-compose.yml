@@ -9,9 +9,6 @@ services:
       - "./:/var/www/html/"
     ports:
       - 8000:8000
-    links:
-      - db
-      - redis
 
   db:
     restart: always

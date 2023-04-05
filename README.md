@@ -11,9 +11,9 @@ You may run `make help` to list available commands.
 
 ## Setup
 1. Clone this repo
-2. Generate SSL Keys by running `make jwt-key`
-3. Generate .env file via `make copy-env`
-4. Start docker services via `make start`
+2. Generate .env file via `make copy-env`
+3. Start docker services via `make start`
+4. Generate SSL Keys and store it in `storage/` directory as `jwt.key` and `jwt.key.pub`. You may also use `make jwt-key` to generate automatically
 5. Run `make init` . This will install dependencies and create/seed database.
 
 ## Checking code standards (PHPStan & PHPInsights)
@@ -42,4 +42,12 @@ make test
 - Main page endpoints
 - Files uploads
 - Listing feature
+
+## Improvements
+- Blacklisting invalidated JWT tokens
+- Policy implementation
+- Additional Unit Tests
+
+## Some changes
+- Changed `marketing` to `is_marketing` field in some admin endpoints for consistency
 
