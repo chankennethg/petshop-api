@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\HasUuid;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class File extends Model
 {
@@ -31,5 +30,4 @@ class File extends Model
     protected $hidden = [
         'id',
     ];
-
 }

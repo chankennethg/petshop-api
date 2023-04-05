@@ -4,8 +4,6 @@ namespace App\Http\Services\Jwt;
 
 use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class JwtAuth
 {

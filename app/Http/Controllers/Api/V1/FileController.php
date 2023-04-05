@@ -36,7 +36,6 @@ class FileController extends Controller
             $fileRecord->size = $this->bytesToHumanReadable($file->getSize());
             $fileRecord->type = $file->getClientMimeType();
             $fileRecord->save();
-
         } catch(Exception $e) {
             throw new ApiException(500, 'Internal Server Error');
         }

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\FileController;
+use App\Http\Controllers\Api\V1\AdminController;
+use App\Http\Controllers\Api\V1\PromotionController;
 
 Route::prefix('admin')->group(function (): void {
     Route::post('create', [AdminController::class, 'createAdmin']);
@@ -16,4 +17,8 @@ Route::prefix('admin')->group(function (): void {
 Route::prefix('file')->group(function (): void {
     Route::post('upload', [FileController::class, 'upload']);
     Route::get('{uuid}', [FileController::class, 'download'])->withoutMiddleware('auth.jwt');
+});
+
+Route::prefix('main')->group(function (): void {
+    Route::get('promotions', [PromotionController::class, 'list'])->withoutMiddleware('auth.jwt');
 });

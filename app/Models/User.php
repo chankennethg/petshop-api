@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Models\Traits\HasUuid;
-use App\Models\Traits\Sortable;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\Traits\Listable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\Contracts\Listable as ListableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+/**
+ * @implements ListableContract<User>
+ */
+class User extends Authenticatable implements ListableContract
 {
-    use HasUuid, HasApiTokens, HasFactory, Notifiable, Sortable;
+    /** @use Listable<User> */
+    use HasUuid, HasApiTokens, HasFactory, Notifiable, Listable;
 
     /**
      * The attributes that are mass assignable.
@@ -30,22 +33,6 @@ class User extends Authenticatable
         'phone_number',
         'avatar',
         'is_marketing',
-    ];
-
-    /**
-     * The attributes that are sortable.
-     *
-     * @var array<int, string>
-     */
-    public $sortable = [
-        'id',
-        'first_name',
-        'last_name',
-        'email',
-        'address',
-        'phone_number',
-        'created_at',
-        'updated_at',
     ];
 
     /**
@@ -70,30 +57,61 @@ class User extends Authenticatable
     ];
 
     /**
-     * Undocumented function
+     * List of sortable columns
      *
-     * @param Builder $query
-     * @return void
+     * @return array<int,string>
      */
-    public function scopeNonAdmin(Builder $query): void
+    public function getSortableColumns(): array
     {
-        $query->where('is_admin', false);
+        return [
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'address',
+            'phone_number',
+            'created_at',
+            'updated_at',
+        ];
+    }
+
+    /**
+     * List of filter like columns
+     *
+     * @return array<int,string>
+     */
+    public function getFilterLikeColumns(): array
+    {
+        return [
+            'first_name',
+            'email',
+            'address',
+            'phone_number',
+        ];
+    }
+
+    /**
+     * List of filter like columns
+     *
+     * @return array<int,string>
+     */
+    public function getFilterExactColumns(): array
+    {
+        return [
+            'created_at',
+            'is_marketing',
+        ];
     }
 
     /**
      * Undocumented function
      *
-     * @param Builder $query
-     * @param array<string, int|string|bool> $filters
-     * @return Builder
+     * @param Builder<User> $query
+     * @return void
      */
-    public function scopeFilter(Builder $query, array $filters): Builder
+    public function scopeNonAdmin(Builder $query): void
     {
-        if ($filters['first_name'] ?? null) {
-            $query->where('first_name', 'like', '%' . $filters['first_name'] . '%');
-        }
-
-        return $query;
+        $query->where('is_admin', false);
     }
 
     /**

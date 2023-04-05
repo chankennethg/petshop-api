@@ -32,6 +32,10 @@ class AdminUserListingRequest extends FormRequest
             'address' => 'string',
             'created_at' => 'date|date_format:Y-m-d',
             'is_marketing' => 'in:0,1',
+            'sortBy' => 'string',
+            'desc' => 'in:true,false',
+            'page' => 'integer',
+            'limit' => 'integer',
         ];
     }
 }

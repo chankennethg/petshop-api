@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FileRequest extends FormRequest
+class PromotionListingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $user = Auth::user();
-        return !$user;
+        return true;
     }
 
     /**
@@ -23,9 +21,13 @@ class FileRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Max 10mb file size
         return [
-            'file' => 'required|image|max:10240',
+            'sortBy' => 'string',
+            'desc' => 'in:true,false',
+            'page' => 'integer',
+            'limit' => 'integer',
+            'valid' => 'in:true,false',
+            'metadata.*' => 'string',
         ];
     }
 }

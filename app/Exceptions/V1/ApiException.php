@@ -17,7 +17,6 @@ class ApiException extends Exception
     protected $statusCode;
 
     /**
-     *
      * @var array<mixed,mixed>
      */
     protected $data;

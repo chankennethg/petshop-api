@@ -11,7 +11,6 @@ use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\V1\Admin\AdminCreateResource;
 use App\Http\Resources\V1\Admin\AdminLoginResource;
 use App\Http\Services\Jwt\JwtAuth;
-use App\Traits\ApiTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -35,11 +34,13 @@ class AdminController extends Controller
      */
     public function list(AdminUserListingRequest $request): JsonResponse
     {
-        $filters = $request->safe()->only(['first_name']);
+        $filters = $request->safe()->all();
+        $sortBy = $filters['sortBy'] ?? 'created_at';
+        $direction = $filters['desc'] ?? 'true';
 
         $users = User::NonAdmin()
             ->filter($filters)
-            ->sort($request)
+            ->sort($sortBy, $direction)
             ->paginate($request->get('limit', 10));
 
         return Response::json($users);
@@ -71,7 +72,7 @@ class AdminController extends Controller
         $id = (string) $user->id;
         $token = $jwtAuth->createToken([
             'uuid' => $user->uuid,
-            'email' => $user->email
+            'email' => $user->email,
         ], $id);
 
         return new AdminLoginResource($user, $token);
@@ -87,8 +88,7 @@ class AdminController extends Controller
     public function createAdmin(
         AdminCreateUserRequest $request,
         JwtAuth $jwtAuth
-    ): AdminCreateResource
-    {
+    ): AdminCreateResource {
         $data = $request->safe()->all();
 
         /** @var User $user*/
